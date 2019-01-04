@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AlphaSkill</string>
+    <string name="title_photo_feature">FaceFeature</string>
 </resources>

@@ -29,12 +29,18 @@ android {
             path 'src/main/jni/Android.mk'
         }
     }
+
+
+    dynamicFeatures = [":photo_feature"]
+
+
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 //    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:28.0.0'
+    api 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.google.android.play:core:1.3.6'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 
     implementation 'com.google.firebase:firebase-core:16.0.6'

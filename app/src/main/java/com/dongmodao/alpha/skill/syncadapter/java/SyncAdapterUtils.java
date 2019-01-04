@@ -42,7 +42,7 @@ public class SyncAdapterUtils {
                 ACCOUNT, ACCOUNT_TYPE);
         // Get an instance of the Android account manager
         AccountManager accountManager =
-                (AccountManager) context.getSystemService(
+                (AccountManager) context.getApplicationContext().getSystemService(
                         ACCOUNT_SERVICE);
         /*
          * Add the account and account type, no password or user data
