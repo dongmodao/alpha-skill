@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.dongmodao.alpha.skill.utils.LogUtils;
+import com.dongmodao.alpha.skill.utils.NetworkUtils;
 import com.google.android.play.core.splitinstall.SplitInstallManager;
 import com.google.android.play.core.splitinstall.SplitInstallManagerFactory;
 
@@ -24,9 +26,11 @@ public class MainActivity extends AppCompatActivity {
         splitInstallManager = SplitInstallManagerFactory.create(this);
 
         findViewById(R.id.btn_click).setOnClickListener(v-> {
-            Intent intent = new Intent();
-            intent.setClassName(getPackageName(), "com.dongmodao.photo_feature.PhotoFeatureActivity");
-            startActivity(intent);
+            Toast.makeText(this, String.format("data = %s; name = %s; IMSI = %s",
+                    NetworkUtils.isMobileDataEnable(this),
+                    NetworkUtils.getOperatorName(this),
+                    NetworkUtils.getOperatorIMSI(this)
+            ), Toast.LENGTH_SHORT).show();
         });
     }
 
