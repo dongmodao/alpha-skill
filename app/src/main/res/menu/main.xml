@@ -4,14 +4,14 @@
 
     <item android:id="@+id/refresh"
         android:title="刷新"
-        app:showAsAction="never"/>
+        app:showAsAction="always"/>
 
     <item android:id="@+id/read"
         android:title="显示"
-        app:showAsAction="never"/>
+        app:showAsAction="always"/>
 
     <item android:id="@+id/clean"
         android:title="清除"
-        app:showAsAction="never"/>
+        app:showAsAction="always"/>
 
 </menu>
