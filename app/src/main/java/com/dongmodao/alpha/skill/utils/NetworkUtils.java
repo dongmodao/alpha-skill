@@ -1,7 +1,13 @@
 package com.dongmodao.alpha.skill.utils;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
+import android.os.Build;
+import android.support.v4.app.ActivityCompat;
+import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 
 /**
@@ -37,7 +43,7 @@ public class NetworkUtils {
      * @return mame of operator
      */
     public static String getOperatorName(Context context) {
-         // getSimOperatorName()就可以直接获取到运营商的名字
+        // getSimOperatorName()就可以直接获取到运营商的名字
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         return telephonyManager.getSimOperatorName();
     }
@@ -57,4 +63,14 @@ public class NetworkUtils {
     }
 
     // TODO: 2019/1/9 dual SIM network data and operator  https://stackoverflow.com/questions/11305407/android-dual-sim-card-api
+
+    @SuppressLint("MissingPermission")
+    public static int getSIMCount(Context context) {
+        if (PermissionUtils.hasPermission(context, Manifest.permission.READ_PHONE_STATE)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                return SubscriptionManager.from(context).getActiveSubscriptionInfoCount();
+            }
+        }
+        return -1;
+    }
 }
