@@ -18,10 +18,10 @@ import java.util.List;
 /**
  * author : tangqihao
  *
- * @time : 2019/1/9
+ * @time : 2019/1/10
  * @project : SIMUtils
  */
-public class ReleaseNetworkUtils {
+public class SIMUtils {
 
     /**
      * 获取当前插入的 SIM 卡中的所有 SubscriptionInfo, 先按照卡槽排序再按照 subId 排序（也就是说在第一次插卡之后更换了卡槽）
@@ -74,7 +74,10 @@ public class ReleaseNetworkUtils {
      * @param subId SIM subId
      * @return MCC+MNC
      */
-    public static String getReleaseOperator(Context context, int subId) {
+    public static String getOperator(Context context, int subId) {
+        if (!isUsableSubIdValue(subId))
+            return null;
+
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 return getOperatorGeN(context, subId);
@@ -98,9 +101,11 @@ public class ReleaseNetworkUtils {
     private static String getOperatorGeN(Context context, int subId) {
         try {
             Class<?> classType = Class.forName("android.telephony.TelephonyManager");
-            Constructor<?> con = classType.getConstructor(Context.class, int.class);         // api 24 的 构造方法
-            TelephonyManager telephonyManager = (TelephonyManager) con.newInstance(context, subId);
-            return telephonyManager.getSimOperator();
+            Constructor<?> con = classType.getConstructor(Context.class);
+            TelephonyManager telephonyManager = (TelephonyManager) con.newInstance(context);
+
+            Method method = telephonyManager.getClass().getMethod("getSimOperatorNumeric", int.class);
+            return (String) method.invoke(telephonyManager, subId);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -127,7 +132,107 @@ public class ReleaseNetworkUtils {
         return null;
     }
 
-    // TODO: 2019/1/9 Android 5.0 双卡信息管理分析 https://www.cnblogs.com/flyme/p/4538002.html
-    // TODO: 2019/1/9 关于Android安卓双卡总结 https://www.jianshu.com/p/6f79981aed7d
+    /**
+     * 普遍使用的获取 SIM 网络运营商名称，如 CMCC
+     * @param context context
+     * @param subId SIM subId
+     * @return the Service Provider Name (SPN)
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
+    public static String getOperatorName(Context context, int subId) {
+        if (!isUsableSubIdValue(subId))
+            return null;
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                return getOperatorNameGeN(context, subId);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                return getOperatorNameGMR1(context, subId);
+            }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 根据 subId 获取 API >= N; GeN = great or equal N
+     * @param context context
+     * @param subId SIM subId
+     * @return the Service Provider Name (SPN)
+     */
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private static String getOperatorNameGeN(Context context, int subId) {
+        try {
+            Class<?> classType = Class.forName("android.telephony.TelephonyManager");
+            Constructor<?> con = classType.getConstructor(Context.class);         // api 24 的 构造方法
+            TelephonyManager telephonyManager = (TelephonyManager) con.newInstance(context);
+            Method method = telephonyManager.getClass().getMethod("getSimOperatorName", int.class);
+            return (String) method.invoke(telephonyManager, subId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 根据 subId 获取 API >= M; GMR1 = great than MR1
+     * @param context context
+     * @param subId SIM subId
+     * @return the Service Provider Name (SPN)
+     */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP_MR1)
+    private static String getOperatorNameGMR1(Context context, int subId) {
+        try {
+            Class<?> classType = Class.forName("android.telephony.TelephonyManager");
+            Constructor<?> con = classType.getConstructor(Context.class);
+            TelephonyManager telephonyManager = (TelephonyManager) con.newInstance(context);
+            Method method = telephonyManager.getClass().getMethod("getSimOperatorNameForSubscription", int.class);
+            return (String) method.invoke(telephonyManager, subId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    /**
+     * @return true if subId is an usable subId value else false. A
+     * usable subId means its neither a INVALID_SUBSCRIPTION_ID nor a DEFAULT_SUB_ID.
+     */
+    public static boolean isUsableSubIdValue(int subId) {
+        return subId >= 0 && subId <= (Integer.MAX_VALUE - 1);
+    }
+
+    /**
+     * 拿到当前默认的 MCC+MNC
+     * @param context context
+     * @return MCC + MNC
+     */
+    public static String getDefaultOperator(Context context) {
+        try {
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            return telephonyManager.getSimOperator();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
+     *  拿到当前默认的运营商 SPN
+     * @param context context
+     * @return SPN
+     */
+    public static String getDefaultOperatorName(Context context) {
+        try {
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            return telephonyManager.getSimOperatorName();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }
