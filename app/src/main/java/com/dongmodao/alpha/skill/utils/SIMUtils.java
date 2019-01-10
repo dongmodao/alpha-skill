@@ -12,7 +12,6 @@ import android.telephony.TelephonyManager;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,7 +23,7 @@ import java.util.List;
 public class SIMUtils {
 
     /**
-     * 获取当前插入的 SIM 卡中的所有 SubscriptionInfo, 先按照卡槽排序再按照 subId 排序（也就是说在第一次插卡之后更换了卡槽）
+     * 获取当前插入的 SIM 卡中的所有 SubscriptionInfo, 先按照卡槽排序再按照 subId 排序（也就是说在第一次插卡之后更换了卡槽）,多卡槽>=2
      * @param context context
      * @return List<SubscriptionInfo>
      */
@@ -39,7 +38,7 @@ public class SIMUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ArrayList<>();
+        return null;
     }
 
     /**
@@ -57,8 +56,7 @@ public class SIMUtils {
             }else{
                 try {
                     SubscriptionManager subscriptionManager = (SubscriptionManager)context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE);
-                    Class cls  =  SubscriptionManager.class.getClass();
-                    Method method = cls.getDeclaredMethod("getDefaultDataSubId");
+                    Method method = subscriptionManager.getClass().getMethod("getDefaultDataSubId");
                     subscriberId = (Integer) method.invoke(subscriptionManager);
                 }catch (Exception e){e.printStackTrace();}
             }
