@@ -82,6 +82,15 @@
             android:exported="false"
             android:syncable="true" />
         <receiver android:name=".syncadapter.java.GcmBroadcastReceiver" />
+
+        <receiver
+            android:name="com.dongmodao.alpha.skill.MyFCMReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

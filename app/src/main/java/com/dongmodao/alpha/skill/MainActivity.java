@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dongmodao.alpha.skill.utils.FCMUtils;
 import com.dongmodao.alpha.skill.utils.LogUtils;
 import com.dongmodao.alpha.skill.utils.NetworkUtils;
 import com.dongmodao.alpha.skill.utils.PermissionUtils;
@@ -37,22 +38,20 @@ public class MainActivity extends AppCompatActivity {
             PermissionUtils.requestPermission(this, Manifest.permission.READ_PHONE_STATE);
 
         findViewById(R.id.btn_click).setOnClickListener(v-> {
-            if (!PermissionUtils.hasPermission(this, Manifest.permission.READ_PHONE_STATE))
-                return;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
-                List<SubscriptionInfo> subs = SIMUtils.getAllSubIdInfos(this);
-                addText(String.format("Active sim count = %d", subs.size()));
-
-                for (SubscriptionInfo info : subs) {
-                    int subId = info.getSubscriptionId();
-                    String code = SIMUtils.getOperator(this, subId);
-                    String spn = SIMUtils.getOperatorName(this, subId);
-                    String log = String.format("subId = %d; MCC+NCC = %s; SPN = %s", subId, code, spn);
-                    addText(log);
-                    Log.e(TAG, log);
+            String topic = "MY_TOPIC";
+            FCMUtils.subscribeToTopic(topic, new FCMUtils.FCMCallbackListener() {
+                @Override
+                public void onSucceed() {
+                    Log.e(TAG, "onSucceed: 订阅成功");
+                    addText(String.format("订阅 %s 成功", topic));
                 }
 
-            }
+                @Override
+                public void onFail() {
+                    Log.e(TAG, "onSucceed: 订阅失败");
+                    addText(String.format("订阅 %s 成功", topic));
+                }
+            });
         });
     }
 
