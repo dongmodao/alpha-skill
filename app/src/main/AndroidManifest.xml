@@ -49,7 +49,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.dongmodao.alpha.skill.syncadapter.java.AuthenticatorService">
+        <service android:name=".skills.syncadapter.AuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
@@ -60,7 +60,7 @@
         </service>
 
         <service
-            android:name="com.dongmodao.alpha.skill.syncadapter.java.SyncService"
+            android:name=".skills.syncadapter.SyncService"
             android:exported="true">
             <!--android:process=":sync"  onPerformSync() 执行的进程-->
             <intent-filter>
@@ -77,14 +77,14 @@
         </service>
 
         <provider
-            android:name="com.dongmodao.alpha.skill.syncadapter.java.StubProvider"
-            android:authorities="com.dongmodao.alpha.skill.syncadapter.java.StubProvider"
+            android:name=".skills.syncadapter.StubProvider"
+            android:authorities="com.dongmodao.alpha.skill.skills.syncadapter.StubProvider"
             android:exported="false"
             android:syncable="true" />
-        <receiver android:name=".syncadapter.java.GcmBroadcastReceiver" />
+        <receiver android:name=".skills.syncadapter.GcmBroadcastReceiver" />
 
         <receiver
-            android:name="com.dongmodao.alpha.skill.MyFCMReceiver"
+            android:name="com.dongmodao.alpha.skill.skills.MyFCMReceiver"
             android:exported="true"
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>

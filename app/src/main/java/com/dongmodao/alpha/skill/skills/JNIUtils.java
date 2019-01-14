@@ -1,4 +1,4 @@
-package com.dongmodao.alpha.skill.jni;
+package com.dongmodao.alpha.skill.skills;
 
 /**
  * author : tangqihao

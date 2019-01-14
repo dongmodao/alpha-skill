@@ -1,4 +1,4 @@
-package com.dongmodao.alpha.skill.syncadapter.java;
+package com.dongmodao.alpha.skill.skills.syncadapter;
 
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;

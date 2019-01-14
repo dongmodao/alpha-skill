@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dongmodao.alpha.skill.skills.JNIUtils;
 import com.dongmodao.alpha.skill.utils.FCMUtils;
 import com.dongmodao.alpha.skill.utils.LogUtils;
 import com.dongmodao.alpha.skill.utils.NetworkUtils;
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (!PermissionUtils.hasPermission(this, Manifest.permission.READ_PHONE_STATE))
             PermissionUtils.requestPermission(this, Manifest.permission.READ_PHONE_STATE);
+
+        Log.e(TAG, "onCreate: " + JNIUtils.getRealStr("dongmodao"));
 
         findViewById(R.id.btn_click).setOnClickListener(v-> {
             String topic = "MY_TOPIC";

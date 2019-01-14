@@ -1,4 +1,4 @@
-package com.dongmodao.alpha.skill.syncadapter.java;
+package com.dongmodao.alpha.skill.skills.syncadapter;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -18,7 +18,7 @@ public class SyncAdapterUtils {
 
     // Constants
     // The authority for the sync adapter's content provider
-    public static final String AUTHORITY = "com.dongmodao.alpha.skill.syncadapter.java.StubProvider";
+    public static final String AUTHORITY = "com.dongmodao.alpha.skill.skills.syncadapter.StubProvider";
     // An account type, in the form of a domain name
     public static final String ACCOUNT_TYPE = "alpha.skill.dongmodao.com";
     // The account name

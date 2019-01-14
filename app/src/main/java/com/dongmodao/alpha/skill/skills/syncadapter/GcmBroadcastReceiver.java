@@ -1,4 +1,4 @@
-package com.dongmodao.alpha.skill.syncadapter.java;
+package com.dongmodao.alpha.skill.skills.syncadapter;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,7 +13,7 @@ import android.content.Intent;
 public class GcmBroadcastReceiver extends BroadcastReceiver {
     // Constants
     // Content provider authority
-    public static final String AUTHORITY = "com.dongmodao.alpha.skill.syncadapter.java.StubProvider";
+    public static final String AUTHORITY = "com.dongmodao.alpha.skill.skills.syncadapter.StubProvider";
     // Account type
     public static final String ACCOUNT_TYPE = "dongmodao.com";
     // Account

@@ -1,4 +1,4 @@
-package com.dongmodao.alpha.skill;
+package com.dongmodao.alpha.skill.skills;
 
 import android.content.Context;
 import android.content.Intent;
