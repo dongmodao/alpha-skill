@@ -6,14 +6,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.ImageView;
 
-import java.util.List;
 import java.util.Random;
 
 public class PhotoFeatureActivity extends AppCompatActivity {
@@ -31,29 +29,14 @@ public class PhotoFeatureActivity extends AppCompatActivity {
         mVsResult.setVisibility(View.VISIBLE);
 
         mViewPager = findViewById(R.id.card_view_pager);
-        mViewPager.setAdapter(new CardViewpager());
-        mViewPager.setOffscreenPageLimit(3);
-//        mViewPager.setPageMargin(-20);
-        mViewPager.setClipChildren(false);
-
-        ViewGroup view = (ViewGroup) mViewPager.getParent();
-        if (view != null) {
-            view.setClipChildren(false);
-            view.setOnTouchListener((v, event) ->{
-//                todo 根据坐标位置更改点击事件
-                mViewPager.dispatchTouchEvent(event);
-                return true;
-            } );
-        }
-
-        mViewPager.setPageTransformer(true, new CardTransformer());
+        mViewPager.setAdapter(new CardViewpagerAdapter());
         mViewPager.setCurrentItem(0);
     }
 
 
 
 
-    class CardViewpager extends PagerAdapter {
+    class CardViewpagerAdapter extends PagerAdapter {
 
         @Override
         public int getCount() {
@@ -71,11 +54,10 @@ public class PhotoFeatureActivity extends AppCompatActivity {
             View view = LayoutInflater.from(PhotoFeatureActivity.this).inflate(R.layout.item_tarot_card, null);
             ImageView imageView = view.findViewById(R.id.iv_content);
             imageView.setBackgroundColor(Color.parseColor(getRandColorCode()));
-            view.setOnClickListener(v-> {
-                mViewPager.setCurrentItem(position);
-                Log.e("---", "instantiateItem: pos = " + position );
-            });
+            view.setScaleX(0.85f);      // 默认先缩小，否则不滑动的情况后面的卡牌无效果
+            view.setScaleY(0.85f);
             container.addView(view);
+            view.setTag(position);
             return view;
 
         }
@@ -83,7 +65,6 @@ public class PhotoFeatureActivity extends AppCompatActivity {
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             container.removeView((View) object);
-
         }
     }
 

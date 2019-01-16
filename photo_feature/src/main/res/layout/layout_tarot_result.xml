@@ -6,10 +6,11 @@
     android:clipChildren="false"
     tools:context=".PhotoFeatureActivity">
 
-    <android.support.v4.view.ViewPager
+    <com.dongmodao.photo_feature.widget.CardViewPager
         android:id="@+id/card_view_pager"
         android:layout_marginStart="100dp"
         android:layout_marginEnd="100dp"
+        android:layout_marginTop="50dp"
         android:clipChildren="false"
         android:layout_width="match_parent"
         android:layout_height="200dp" />

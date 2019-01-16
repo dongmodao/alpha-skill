@@ -41,22 +41,11 @@ public class MainActivity extends AppCompatActivity {
         Log.e(TAG, "onCreate: " + JNIUtils.getRealStr("dongmodao"));
 
         findViewById(R.id.btn_click).setOnClickListener(v-> {
-            String topic = "MY_TOPIC";
-            FCMUtils.subscribeToTopic(topic, new FCMUtils.FCMCallbackListener() {
-                @Override
-                public void onSucceed() {
-                    Log.e(TAG, "onSucceed: 订阅成功");
-                    addText(String.format("订阅 %s 成功", topic));
-                }
-
-                @Override
-                public void onFail() {
-                    Log.e(TAG, "onSucceed: 订阅失败");
-                    addText(String.format("订阅 %s 成功", topic));
-                }
-            });
+            Intent intent = new Intent();
+            intent.setClassName(getPackageName(), "com.dongmodao.photo_feature.PhotoFeatureActivity");
+            startActivity(intent);
         });
-    }
+}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
