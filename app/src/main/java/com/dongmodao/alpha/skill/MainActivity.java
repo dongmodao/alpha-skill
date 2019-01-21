@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.telephony.SubscriptionInfo;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,15 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dongmodao.alpha.skill.skills.JNIUtils;
-import com.dongmodao.alpha.skill.utils.FCMUtils;
-import com.dongmodao.alpha.skill.utils.LogUtils;
-import com.dongmodao.alpha.skill.utils.NetworkUtils;
 import com.dongmodao.alpha.skill.utils.PermissionUtils;
 import com.dongmodao.alpha.skill.utils.SIMUtils;
-import com.google.android.play.core.splitinstall.SplitInstallManager;
-import com.google.android.play.core.splitinstall.SplitInstallManagerFactory;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         if (!PermissionUtils.hasPermission(this, Manifest.permission.READ_PHONE_STATE))
             PermissionUtils.requestPermission(this, Manifest.permission.READ_PHONE_STATE);
 
-        Log.e(TAG, "onCreate: " + JNIUtils.getRealStr("dongmodao"));
+        Log.e(TAG, "onCreate: " + JNIUtils.getRealStr("1abcdefgh00000008"));
 
         findViewById(R.id.btn_click).setOnClickListener(v-> {
             Intent intent = new Intent();
