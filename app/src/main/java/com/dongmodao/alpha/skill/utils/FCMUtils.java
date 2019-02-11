@@ -1,5 +1,8 @@
 package com.dongmodao.alpha.skill.utils;
 
+import android.widget.Toast;
+
+import com.dongmodao.alpha.skill.BuildConfig;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.List;
@@ -24,13 +27,14 @@ public class FCMUtils {
      * @param listener 结果回调，操作成功或者失败
      */
     public static void subscribeToTopic(String topic, FCMCallbackListener listener) {
-        if (IS_DEBUG) {
+        if (BuildConfig.DEBUG) {
             topic += "_DEBUG";
         }
         FirebaseMessaging.getInstance().subscribeToTopic(topic)
                 .addOnCompleteListener(task -> {
-                    if (listener == null)
+                    if (listener == null) {
                         return;
+                    }
                     if (task.isSuccessful()) {
                         listener.onSucceed();
                     } else {
@@ -46,13 +50,14 @@ public class FCMUtils {
      * @param listener 操作回调
      */
     public static void unsubscribeFromTopic(String topic, FCMCallbackListener listener) {
-        if (IS_DEBUG) {
+        if (BuildConfig.DEBUG) {
             topic += "_DEBUG";
         }
         FirebaseMessaging.getInstance().unsubscribeFromTopic(topic)
                 .addOnCompleteListener(task -> {
-                    if (listener == null)
-                        return ;
+                    if (listener == null) {
+                        return;
+                    }
                     if (task.isSuccessful()) {
                         listener.onSucceed();
                     } else {

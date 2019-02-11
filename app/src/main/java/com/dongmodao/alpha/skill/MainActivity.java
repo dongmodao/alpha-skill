@@ -1,18 +1,22 @@
 package com.dongmodao.alpha.skill;
 
-import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dongmodao.alpha.skill.skills.JNIUtils;
-import com.dongmodao.alpha.skill.utils.PermissionUtils;
-import com.dongmodao.alpha.skill.utils.SIMUtils;
+import com.dongmodao.alpha.skill.utils.FCMUtils;
+import com.dongmodao.alpha.skill.utils.LogUtils;
+import com.dongmodao.alpha.skill.workmanager.FCMWorker;
+import com.dongmodao.alpha.skill.workmanager.FCMWorkerService;
+
+import java.util.concurrent.TimeUnit;
+
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,17 +31,22 @@ public class MainActivity extends AppCompatActivity {
 
         mTvLog = findViewById(R.id.tv_log);
 
-        if (!PermissionUtils.hasPermission(this, Manifest.permission.READ_PHONE_STATE))
-            PermissionUtils.requestPermission(this, Manifest.permission.READ_PHONE_STATE);
-
-        Log.e(TAG, "onCreate: " + JNIUtils.getRealStr("1abcdefgh00000008"));
-
         findViewById(R.id.btn_click).setOnClickListener(v-> {
-            Intent intent = new Intent();
-            intent.setClassName(getPackageName(), "com.dongmodao.photo_feature.PhotoFeatureActivity");
-            startActivity(intent);
+            Toast.makeText(this, "debug = " + BuildConfig.DEBUG, Toast.LENGTH_SHORT).show();
         });
+
+        addText(LogUtils.read(this));
+        startService(new Intent(this, FCMWorkerService.class));
+        setupWorker();
 }
+
+    private void setupWorker() {
+        PeriodicWorkRequest.Builder photoCheckBuilder =
+                new PeriodicWorkRequest.Builder(FCMWorker.class, 15,
+                        TimeUnit.MINUTES);
+        PeriodicWorkRequest fcmWork = photoCheckBuilder.build();
+        WorkManager.getInstance().enqueue(fcmWork);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -49,22 +58,36 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.refresh:
-                String name = SIMUtils.getOperator(this, 0);
-                Toast.makeText(this, "operator = " + name, Toast.LENGTH_SHORT).show();
+                FCMUtils.subscribeToTopic(getString(R.string.app_name), new FCMUtils.FCMCallbackListener() {
+                    @Override
+                    public void onSucceed() {
+                        Toast.makeText(MainActivity.this, "订阅成功", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFail() {
+                        Toast.makeText(MainActivity.this, "订阅失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
                 break;
             case R.id.read:
-                String name2 = SIMUtils.getOperator(this, 1);
-                Toast.makeText(this, "operator = " + name2, Toast.LENGTH_SHORT).show();
+                setText(LogUtils.read(this));
                 break;
             case R.id.clean:
+                LogUtils.clean(this);
+                break;
+            default:
                 break;
         }
         return true;
     }
 
     private void addText(String str) {
-        builder.append(str + "\n");
+        builder.append(str).append("\n");
         mTvLog.setText(builder.toString());
+    }
 
+    private void setText(String str) {
+        mTvLog.setText(str);
     }
 }
