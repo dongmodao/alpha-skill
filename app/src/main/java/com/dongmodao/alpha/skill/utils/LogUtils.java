@@ -67,8 +67,9 @@ public class LogUtils {
     public static void clean(Context context) {
         File cacheDir = context.getCacheDir();
         File file = new File(cacheDir, LOG_FILE);
-        if (file.exists())
+        if (file.exists()) {
             file.delete();
+        }
     }
 
     private static File checkOrNew(File cacheDir, String name) {

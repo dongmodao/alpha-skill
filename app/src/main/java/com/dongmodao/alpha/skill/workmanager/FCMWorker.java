@@ -1,9 +1,7 @@
 package com.dongmodao.alpha.skill.workmanager;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
 
 import com.dongmodao.alpha.skill.utils.LogUtils;
 
@@ -32,6 +30,6 @@ public class FCMWorker extends Worker {
 
     private void startFCMService() {
         LogUtils.log(mContext, "startFCMService --- 启动服务");
-        mContext.startService(new Intent(mContext, FCMWorkerService.class));
+//        mContext.startService(new Intent(mContext, FCMWorkerService.class));
     }
 }

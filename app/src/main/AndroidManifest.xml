@@ -60,8 +60,9 @@
         </service>
 
         <service
-            android:name=".skills.syncadapter.SyncService"
-            android:exported="true">
+            android:name="com.dongmodao.alpha.skill.skills.syncadapter.SyncService"
+            android:exported="true"
+            android:process=":sync" >
             <!--android:process=":sync"  onPerformSync() 执行的进程-->
             <intent-filter>
                 <action android:name="android.content.SyncAdapter"/>
@@ -78,7 +79,7 @@
         <service android:name=".workmanager.FCMWorkerService" />
 
         <provider
-            android:name=".skills.syncadapter.StubProvider"
+            android:name="com.dongmodao.alpha.skill.skills.syncadapter.StubProvider"
             android:authorities="com.dongmodao.alpha.skill.skills.syncadapter.StubProvider"
             android:exported="false"
             android:syncable="true" />

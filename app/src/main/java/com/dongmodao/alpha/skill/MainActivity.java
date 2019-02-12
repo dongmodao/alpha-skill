@@ -1,6 +1,7 @@
 package com.dongmodao.alpha.skill;
 
-import android.content.Intent;
+import android.accounts.Account;
+import android.content.ContentResolver;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -8,15 +9,18 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dongmodao.alpha.skill.skills.syncadapter.SyncAdapterUtils;
 import com.dongmodao.alpha.skill.utils.FCMUtils;
 import com.dongmodao.alpha.skill.utils.LogUtils;
 import com.dongmodao.alpha.skill.workmanager.FCMWorker;
-import com.dongmodao.alpha.skill.workmanager.FCMWorkerService;
 
-import java.util.concurrent.TimeUnit;
-
-import androidx.work.PeriodicWorkRequest;
+import androidx.work.Constraints;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
+
+import static com.dongmodao.alpha.skill.skills.syncadapter.SyncAdapterUtils.AUTHORITY;
+import static com.dongmodao.alpha.skill.skills.syncadapter.SyncAdapterUtils.SYNC_INTERVAL;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,22 +34,37 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mTvLog = findViewById(R.id.tv_log);
+        Account mAccount = SyncAdapterUtils.CreateSyncAccount(this);
 
         findViewById(R.id.btn_click).setOnClickListener(v-> {
-            Toast.makeText(this, "debug = " + BuildConfig.DEBUG, Toast.LENGTH_SHORT).show();
+//            setupWorker();
+            /*
+             * Turn on periodic syncing
+             */
+            ContentResolver.addPeriodicSync(
+                    mAccount,
+                    AUTHORITY,
+                    Bundle.EMPTY,
+                    SYNC_INTERVAL);
         });
 
-        addText(LogUtils.read(this));
-        startService(new Intent(this, FCMWorkerService.class));
-        setupWorker();
+
 }
 
     private void setupWorker() {
-        PeriodicWorkRequest.Builder photoCheckBuilder =
-                new PeriodicWorkRequest.Builder(FCMWorker.class, 15,
-                        TimeUnit.MINUTES);
-        PeriodicWorkRequest fcmWork = photoCheckBuilder.build();
-        WorkManager.getInstance().enqueue(fcmWork);
+//        PeriodicWorkRequest.Builder photoCheckBuilder =
+//                new PeriodicWorkRequest.Builder(FCMWorker.class, 15,
+//                        TimeUnit.MINUTES);
+//        PeriodicWorkRequest fcmWork = photoCheckBuilder.build();
+//        WorkManager.getInstance().enqueue(fcmWork);
+//        // tag
+//        WorkManager.getInstance().cancelAllWorkByTag("tag");
+//        // id
+//        WorkManager.getInstance().cancelWorkById(fcmWork.getId());
+        OneTimeWorkRequest.Builder builder = new OneTimeWorkRequest.Builder(FCMWorker.class)
+                .setConstraints(new Constraints.Builder().setRequiresCharging(true)
+                        .setRequiredNetworkType(NetworkType.CONNECTED).build());
+        WorkManager.getInstance().enqueue(builder.build());
     }
 
     @Override

@@ -27,9 +27,9 @@ public class FCMUtils {
      * @param listener 结果回调，操作成功或者失败
      */
     public static void subscribeToTopic(String topic, FCMCallbackListener listener) {
-        if (BuildConfig.DEBUG) {
-            topic += "_DEBUG";
-        }
+//        if (IS_DEBUG) {
+//            topic += "_DEBUG";
+//        }
         FirebaseMessaging.getInstance().subscribeToTopic(topic)
                 .addOnCompleteListener(task -> {
                     if (listener == null) {
@@ -50,9 +50,9 @@ public class FCMUtils {
      * @param listener 操作回调
      */
     public static void unsubscribeFromTopic(String topic, FCMCallbackListener listener) {
-        if (BuildConfig.DEBUG) {
-            topic += "_DEBUG";
-        }
+//        if (IS_DEBUG) {
+//            topic += "_DEBUG";
+//        }
         FirebaseMessaging.getInstance().unsubscribeFromTopic(topic)
                 .addOnCompleteListener(task -> {
                     if (listener == null) {
