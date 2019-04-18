@@ -3,17 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.dongmodao.alpha.skill">
 
-    <uses-permission
-        android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission
-        android:name="android.permission.READ_SYNC_SETTINGS"/>
-    <uses-permission
-        android:name="android.permission.WRITE_SYNC_SETTINGS"/>
-    <uses-permission
-        android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
+        android:name=".TheApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -21,25 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
-        <!--fcm start-->
-        <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
-             See README(https://goo.gl/l4GJaQ) for more. -->
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@mipmap/ic_launcher" />
-        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
-             notification message. See README(https://goo.gl/6BKBk7) for more. -->
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorAccent" />
-
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="${applicationId}.notification" />
-        <!--fcm end-->
-
-
 
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -49,50 +23,6 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".skills.syncadapter.AuthenticatorService">
-            <intent-filter>
-                <action android:name="android.accounts.AccountAuthenticator" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator" />
-        </service>
-
-        <service
-            android:name="com.dongmodao.alpha.skill.skills.syncadapter.SyncService"
-            android:exported="true"
-            android:process=":sync" >
-            <!--android:process=":sync"  onPerformSync() 执行的进程-->
-            <intent-filter>
-                <action android:name="android.content.SyncAdapter"/>
-            </intent-filter>
-            <meta-data android:name="android.content.SyncAdapter"
-                android:resource="@xml/syncadapter" />
-        </service>
-
-        <service android:name="com.dongmodao.alpha.skill.service.FCMService" >
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-        <service android:name=".workmanager.FCMWorkerService" />
-
-        <provider
-            android:name="com.dongmodao.alpha.skill.skills.syncadapter.StubProvider"
-            android:authorities="com.dongmodao.alpha.skill.skills.syncadapter.StubProvider"
-            android:exported="false"
-            android:syncable="true" />
-        <receiver android:name=".skills.syncadapter.GcmBroadcastReceiver" />
-
-        <receiver
-            android:name="com.dongmodao.alpha.skill.skills.MyFCMReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>
