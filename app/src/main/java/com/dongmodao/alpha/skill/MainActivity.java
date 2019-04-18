@@ -2,11 +2,14 @@ package com.dongmodao.alpha.skill;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.dongmodao.alpha.skill.utils.LogUtils;
+import com.dongmodao.alpha.skill.utils.SubsBinder;
+import com.dongmodao.subs.annotation.SubsClass;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,16 +17,20 @@ public class MainActivity extends AppCompatActivity {
     private StringBuilder builder = new StringBuilder();
     private TextView mTvLog;
 
+    @SubsClass("dongmodao")
+    public String name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        SubsBinder.bind(this);
         mTvLog = findViewById(R.id.tv_log);
 
         findViewById(R.id.btn_click).setOnClickListener(v-> {
 
         });
+
+        Log.e(TAG, "onCreate: name = " + name);
 
 
 }
