@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.dongmodao.alpha.skill.utils.LogUtils;
 import com.dongmodao.alpha.skill.utils.SubsBinder;
-import com.dongmodao.subs.annotation.SubsClass;
+import com.dongmodao.subs.annotation.ASubsClass;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     private StringBuilder builder = new StringBuilder();
     private TextView mTvLog;
 
-    @SubsClass("dongmodao")
+    @ASubsClass("dongmodao")
     public String name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

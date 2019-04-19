@@ -5,10 +5,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+/**
+ * @author : tangqihao
+ * @date : 2019/4/19
+ */
+@Retention(RetentionPolicy.SOURCE)
+@Target(ElementType.TYPE)
 public @interface SubsClass {
-    String value();
+    String value()default "src\\main\\java";
     // TODO: 2019/4/19 标记在类名上 表示该类需要进行注入
     // TODO: 2019/4/19 类名获取对应的变量，方法
     // TODO: 2019/4/19 对变量和方法进行存储，注意重名问题，建立命名池

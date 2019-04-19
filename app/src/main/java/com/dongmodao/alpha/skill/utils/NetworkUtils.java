@@ -12,6 +12,8 @@ import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.dongmodao.subs.annotation.SubsClass;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -21,6 +23,7 @@ import java.lang.reflect.Method;
  * date: 2019/1/8
  * time: 23:49
  */
+@SubsClass
 public class NetworkUtils {
 
     /**

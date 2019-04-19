@@ -1,7 +1,7 @@
 package com.dongmodao.annoprocess;
 
 
-import com.dongmodao.subs.annotation.SubsClass;
+import com.dongmodao.subs.annotation.ASubsClass;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
@@ -32,19 +32,13 @@ import javax.lang.model.util.Types;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
 @AutoService(Processor.class)
-public class SubsClassProcess extends AbstractProcessor {
+public class ASubsClassProcess extends AbstractProcessor {
 
     private Messager messager;
     private Elements elementUtils;
     private Filer filer;
     private Types typeUtils;
 
-    /**
-     *
-     * 初始化操作
-     *
-     * @param processingEnvironment
-     */
     @Override
     public synchronized void init(ProcessingEnvironment processingEnvironment) {
         super.init(processingEnvironment);
@@ -54,52 +48,27 @@ public class SubsClassProcess extends AbstractProcessor {
         messager = processingEnvironment.getMessager();
     }
 
-    /**
-     * 返回此Porcessor可以处理的注解操作
-     *
-     * @return
-     */
+
     @Override
     public Set<String> getSupportedOptions() {
         return super.getSupportedOptions();
     }
 
-    /**
-     * 返回此注释 Processor 支持的最新的源版本
-     * <p>
-     * 该方法可以通过注解@SupportedSourceVersion指定
-     *
-     * @return
-     */
     @Override
     public SourceVersion getSupportedSourceVersion() {
         return SourceVersion.latestSupported();
     }
 
-    /**
-     * 返回此 Processor 支持的注释类型的名称。结果元素可能是某一受支持注释类型的规范（完全限定）名称。它也可能是 " name.*" 形式的名称，表示所有以 " name." 开头的规范名称的注释类型集合。最后， "*" 自身表示所有注释类型的集合，包括空集。注意，Processor 不应声明 "*"，除非它实际处理了所有文件；声明不必要的注释可能导致在某些环境中的性能下降。
-     * <p>
-     * 该方法可以通过注解@SupportedSourceVersion指定
-     *
-     * @return
-     */
+
     @Override
     public Set<String> getSupportedAnnotationTypes() {
         Set<String> set = new LinkedHashSet<>();
-        set.add(SubsClass.class.getCanonicalName());
+        set.add(ASubsClass.class.getCanonicalName());
         return set;
     }
 
-    /**
-     * 注解处理器的核心方法，处理具体的注解
-     *
-     * @param set
-     * @param roundEnvironment
-     * @return
-     */
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
-        // 通过roundEnvironment扫描所有的类文件，获取所有存在指定注解的字段
         Map<TypeElement, List<FieldInfo>> targetMap = getTargetMap(roundEnvironment);
 
         createJavaFile(targetMap.entrySet());
@@ -107,27 +76,14 @@ public class SubsClassProcess extends AbstractProcessor {
     }
 
 
-    /**
-     * 获取所有存在注解的类
-     *
-     * @param roundEnvironment
-     * @return
-     */
     private Map<TypeElement, List<FieldInfo>> getTargetMap(RoundEnvironment roundEnvironment) {
 
         Map<TypeElement, List<FieldInfo>> targetMap = new HashMap<>();
 
-        // 1、获取代码中所有使用 @SubsClass 注解修饰的字段
-        Set<? extends Element> annotatedElements = roundEnvironment.getElementsAnnotatedWith(SubsClass.class);
+        Set<? extends Element> annotatedElements = roundEnvironment.getElementsAnnotatedWith(ASubsClass.class);
         for (Element element : annotatedElements) {
-            // 获取字段名称 (textView)
             String fieldName = element.getSimpleName().toString();
-            // 获取字段类型 (android.widget.TextView)
-//            TypeMirror fieldType = element.asType();
-            // 获取注解元素的值 (R.id.textView)
-            String value = element.getAnnotation(SubsClass.class).value();
-
-            // 获取声明element的全限定类名 (com.zhangke.simplifybutterknife.MainActivity)
+            String value = element.getAnnotation(ASubsClass.class).value();
             TypeElement typeElement = (TypeElement) element.getEnclosingElement();
             List<FieldInfo> list = targetMap.get(typeElement);
             if (list == null) {
@@ -154,19 +110,16 @@ public class SubsClassProcess extends AbstractProcessor {
                 continue;
             }
 
-            // 获取包名
             String packageName = elementUtils.getPackageOf(typeElement).getQualifiedName().toString();
-            // 根据旧Java类名创建新的Java文件
             String className = typeElement.getQualifiedName().toString().substring(packageName.length() + 1);
-            String newClassName = className + "_SubsBinding";
+            String newClassName = className + "_SubsClass";
 
 
             MethodSpec.Builder methodBuilder = MethodSpec.constructorBuilder()
                     .addModifiers(Modifier.PUBLIC)
                     .addParameter(ClassName.bestGuess(className), "target");
             for (FieldInfo fieldInfo : list) {
-//                String packageNameString = fieldInfo.getFieldType().toString();
-//                ClassName viewClass = ClassName.bestGuess(packageNameString);
+
                 methodBuilder.addStatement
                         ("target.$L = $S", fieldInfo.getFieldName()
                                 , fieldInfo.getVal());
