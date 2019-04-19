@@ -1,10 +1,12 @@
 package com.dongmodao.annoprocess;
 
+import com.dongmodao.annoprocess.visitors.MethodNamePrinter;
 import com.dongmodao.subs.annotation.ASubsClass;
 import com.dongmodao.subs.annotation.SubsClass;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseResult;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.visitor.VoidVisitor;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 
@@ -12,6 +14,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -65,7 +68,8 @@ public class SubsClassProcessor extends AbstractProcessor {
 
     private void tryParseClasses(List<String> clazzList) {
         for (String name : clazzList) {
-            String realClassPath = System.getProperty("user.dir") + "\\" + name.replace('.', '\\') + ".java";
+//            String realClassPath = System.getProperty("user.dir") + "\\" + name.replace('.', '\\') + ".java";
+            String realClassPath = name.replace('.', '\\') + ".java";
             parseClazz(realClassPath);
         }
     }
@@ -76,8 +80,18 @@ public class SubsClassProcessor extends AbstractProcessor {
         JavaParser javaParser = new JavaParser();
 
         try {
-            ParseResult<CompilationUnit> compilationUnit = javaParser.parse(sourceFile);
-            log(compilationUnit.toString());
+            ParseResult<CompilationUnit> compilationUnits = javaParser.parse(sourceFile);
+            Optional<CompilationUnit> unitOptional = compilationUnits.getResult();
+            CompilationUnit compilationUnit = unitOptional.get();
+            log("unit == " , compilationUnit.toString());
+            log(compilationUnits.toString());
+            VoidVisitor visitor = new MethodNamePrinter();
+            visitor.visit(compilationUnit, null);
+            compilationUnit.addClass("TestClaSS")
+                    .setPublic(true)
+                    .setStatic(true);
+            log("filename", compilationUnit.getStorage().get().getPath().toString());
+            compilationUnit.getStorage().get().save();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

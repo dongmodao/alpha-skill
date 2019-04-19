@@ -1,21 +1,13 @@
 package com.dongmodao.alpha.skill.utils;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
-import android.telephony.SubscriptionManager;
-import android.telephony.TelephonyManager;
-import android.util.Log;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 
 import com.dongmodao.subs.annotation.SubsClass;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
@@ -27,42 +19,73 @@ import java.lang.reflect.Method;
 public class NetworkUtils {
 
     /**
-     * 检测当前网络是否是移动网络，WIFI 和 数据 同时打开时 返回的也是 false 应为流量来源于 wifi
-     * @param context
-     * @return
+     * 判断 wifi
      */
-    public static boolean isMobileDataEnable(Context context) {
-
+    public static boolean getWifiEnable(Context context) {
         try {
-            ConnectivityManager connectivityManager = (ConnectivityManager) context
-                    .getSystemService(Context.CONNECTIVITY_SERVICE);
-            return connectivityManager.getNetworkInfo(
-                    ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo info = connectivityManager.getActiveNetworkInfo();
+            return !(info == null || !info.isAvailable()) && (info.getType() == ConnectivityManager.TYPE_WIFI);
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-        return false;
-    }
-
-    @SuppressLint("MissingPermission")
-    public static int getSIMCount(Context context) {
-        if (PermissionUtils.hasPermission(context, Manifest.permission.READ_PHONE_STATE)) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                return context.getSystemService(SubscriptionManager.class).getActiveSubscriptionInfoCount();
-            }
-        }
-        return -1;
     }
 
     /**
-     * Returns the number of phones available.
-     * Returns 0 if none of voice, sms, data is not supported
-     * Returns 1 for Single standby mode (Single SIM functionality)
-     * Returns 2 for Dual standby mode.(Dual SIM functionality)
+     * 判断流量是否可用
      */
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public static int getPhoneCount(Context context) {
-        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        return telephonyManager.getPhoneCount();
+    public static boolean getMobileEnable(Context context) {
+        try {
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            @SuppressLint("PrivateApi")
+            Method getMobileDataEnabledMethod = ConnectivityManager.class.getDeclaredMethod("getMobileDataEnabled");
+            getMobileDataEnabledMethod.setAccessible(true);
+            return (boolean) getMobileDataEnabledMethod.invoke(connectivityManager);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 设置wifi状态
+     * @param context context
+     * @param enable enable
+     */
+    public static boolean setWifiEnable(Context context, Boolean enable) {
+        try {
+            WifiManager mWifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            return mWifiManager.setWifiEnabled(enable);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 判断网络是否可用
+     */
+    public static boolean getNetworkEnable(Context context) {
+        return getWifiEnable(context) || getMobileEnable(context);
+    }
+
+    /**
+     * 获取网络类型
+     * @param context context
+     * @return -1:None  0: Mobile   1:Wifi
+     */
+    public static int getNetworkType(Context context) {
+        try {
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            if (networkInfo == null || !networkInfo.isConnected()) {
+                return -1;
+            }
+            return networkInfo.getType();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  -1;
+        }
     }
 }
