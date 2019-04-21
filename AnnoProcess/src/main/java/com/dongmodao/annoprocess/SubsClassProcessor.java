@@ -1,14 +1,13 @@
 package com.dongmodao.annoprocess;
 
 import com.dongmodao.annoprocess.visitors.MethodNamePrinter;
-import com.dongmodao.subs.annotation.ASubsClass;
+import com.dongmodao.annoprocess.visitors.TryVisitor;
 import com.dongmodao.subs.annotation.SubsClass;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseResult;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.visitor.VoidVisitor;
 import com.google.auto.service.AutoService;
-import com.squareup.javapoet.ClassName;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -87,6 +86,8 @@ public class SubsClassProcessor extends AbstractProcessor {
             log(compilationUnits.toString());
             VoidVisitor visitor = new MethodNamePrinter();
             visitor.visit(compilationUnit, null);
+            TryVisitor tryVisitor = new TryVisitor();
+            tryVisitor.visit(compilationUnit, null);
             compilationUnit.addClass("TestClaSS")
                     .setPublic(true)
                     .setStatic(true);
