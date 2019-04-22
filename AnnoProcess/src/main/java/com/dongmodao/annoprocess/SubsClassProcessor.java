@@ -1,19 +1,11 @@
 package com.dongmodao.annoprocess;
 
-import com.dongmodao.annoprocess.visitors.MethodNamePrinter;
-import com.dongmodao.annoprocess.visitors.TryVisitor;
+import com.dongmodao.annoprocess.actions.CodeRunner;
 import com.dongmodao.subs.annotation.SubsClass;
-import com.github.javaparser.JavaParser;
-import com.github.javaparser.ParseResult;
-import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.visitor.VoidVisitor;
 import com.google.auto.service.AutoService;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -75,29 +67,7 @@ public class SubsClassProcessor extends AbstractProcessor {
 
     private void parseClazz(String path) {
         log("path", path);
-        File sourceFile = new File(path);
-        JavaParser javaParser = new JavaParser();
-
-        try {
-            ParseResult<CompilationUnit> compilationUnits = javaParser.parse(sourceFile);
-            Optional<CompilationUnit> unitOptional = compilationUnits.getResult();
-            CompilationUnit compilationUnit = unitOptional.get();
-            log("unit == " , compilationUnit.toString());
-            log(compilationUnits.toString());
-            VoidVisitor visitor = new MethodNamePrinter();
-            visitor.visit(compilationUnit, null);
-            TryVisitor tryVisitor = new TryVisitor();
-            tryVisitor.visit(compilationUnit, null);
-            compilationUnit.addClass("TestClaSS")
-                    .setPublic(true)
-                    .setStatic(true);
-            log("filename", compilationUnit.getStorage().get().getPath().toString());
-            compilationUnit.getStorage().get().save();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-
+        new CodeRunner().run(path);
     }
 
     private static void log(String msg) {

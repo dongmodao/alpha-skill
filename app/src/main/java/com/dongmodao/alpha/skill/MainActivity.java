@@ -10,7 +10,9 @@ import android.widget.TextView;
 import com.dongmodao.alpha.skill.utils.LogUtils;
 import com.dongmodao.alpha.skill.utils.SubsBinder;
 import com.dongmodao.subs.annotation.ASubsClass;
+import com.dongmodao.subs.annotation.SubsClass;
 
+//@SubsClass
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity---";
@@ -27,7 +29,12 @@ public class MainActivity extends AppCompatActivity {
         mTvLog = findViewById(R.id.tv_log);
 
         findViewById(R.id.btn_click).setOnClickListener(v-> {
-
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.e("------", "use log");
+                }
+            });
         });
 
         Log.e(TAG, "onCreate: name = " + name);

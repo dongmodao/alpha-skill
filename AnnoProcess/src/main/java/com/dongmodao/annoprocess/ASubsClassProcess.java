@@ -1,6 +1,7 @@
 package com.dongmodao.annoprocess;
 
 
+import com.dongmodao.annoprocess.bean.FieldInfo;
 import com.dongmodao.subs.annotation.ASubsClass;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;

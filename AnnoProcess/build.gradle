@@ -8,5 +8,5 @@ dependencies {
     implementation 'com.github.javaparser:javaparser-symbol-solver-core:3.13.7'
 }
 
-sourceCompatibility = "7"
-targetCompatibility = "7"
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'

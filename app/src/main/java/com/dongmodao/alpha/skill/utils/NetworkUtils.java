@@ -22,6 +22,7 @@ public class NetworkUtils {
      * 判断 wifi
      */
     public static boolean getWifiEnable(Context context) {
+
         try {
             ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo info = connectivityManager.getActiveNetworkInfo();
@@ -30,6 +31,7 @@ public class NetworkUtils {
             e.printStackTrace();
             return false;
         }
+
     }
 
     /**

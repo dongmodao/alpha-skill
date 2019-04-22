@@ -1,4 +1,4 @@
-package com.dongmodao.annoprocess;
+package com.dongmodao.annoprocess.bean;
 
 
 /**

@@ -1,11 +1,12 @@
 package com.dongmodao.annoprocess.visitors;
 
+import com.dongmodao.annoprocess.utils.NamePool;
 import com.github.javaparser.StaticJavaParser;
-import com.github.javaparser.ast.stmt.EmptyStmt;
+import com.github.javaparser.ast.body.VariableDeclarator;
+import com.github.javaparser.ast.stmt.ExpressionStmt;
 import com.github.javaparser.ast.stmt.TryStmt;
 import com.github.javaparser.ast.visitor.ModifierVisitor;
 import com.github.javaparser.ast.visitor.Visitable;
-import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 /**
  * @author: dongmodao
@@ -18,13 +19,21 @@ public class TryVisitor extends ModifierVisitor {
     public Visitable visit(TryStmt n, Object arg) {
         System.out.println("-----change" + n.toString());
         n.getTryBlock().addStatement("int a = 1101;");
-        n.getTryBlock().addStatement(0, StaticJavaParser.parseStatement("String addStr = \"gold\";"));
-        n.getTryBlock().accept(new MethodNamePrinter(), null);
+        n.getTryBlock().addStatement(0, StaticJavaParser.parseStatement("String " + NamePool.getInstance().getRandomName() + " = \"gold\";"));
         return super.visit(n, arg);
     }
 
     @Override
-    public Visitable visit(EmptyStmt n, Object arg) {
+    public Visitable visit(ExpressionStmt n, Object arg) {
+        System.out.println("-----ExpressionStmt: " + n.toString());
+        n.remove(n.getChildNodes().get(0));
+        return super.visit(n, arg);
+    }
+
+    @Override
+    public Visitable visit(VariableDeclarator n, Object arg) {
+        System.out.println("-----VariableDeclarator: " + n.toString());
+//        n.remove(n.getChildNodes().get(0));
         return super.visit(n, arg);
     }
 }
