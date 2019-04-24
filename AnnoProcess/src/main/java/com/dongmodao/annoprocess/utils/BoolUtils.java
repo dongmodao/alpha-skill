@@ -39,7 +39,7 @@ public class BoolUtils {
      *     int name49 = 19;
      *     int name50 = 1849688064;
      *     int name51 = 7;
-     *     if(name48 << name49 <= name50 >> int name51 = 7)
+     *     if(name48 >> name49 <= name50 >> int name51 = 7)
      */
     private static String getBitStatementWithVar() {
         StringBuilder builder = new StringBuilder();
@@ -67,7 +67,7 @@ public class BoolUtils {
 
         builder.append("if(");
         if (a >> b > c >> d) {
-            builder.append(n1).append(" << ").append(n2).append(" > ").append(n3).append(" >> ").append(n4);
+            builder.append(n1).append(" >> ").append(n2).append(" > ").append(n3).append(" >> ").append(n4);
         } else {
             builder.append(n1).append(" >> ").append(n2).append(" <= ").append(n3).append(" >> ").append(n4);
         }
@@ -81,5 +81,25 @@ public class BoolUtils {
         } else {
             return "{" + getBitStatementWithVar() + "{" + args[0] + "}else{" + args[1] + "}}";
         }
+    }
+
+    private String getStrTrueStmt() {
+        int l = random.nextInt(20) + 3;
+        int r = random.nextInt(20) + 3;
+
+        if (l > r) {
+            return emptyStr(l) + ".length() > " + emptyStr(r);
+        } else {
+            return emptyStr(l) + ".length() <= " + emptyStr(r);
+        }
+
+    }
+
+    private String emptyStr(int n) {
+        StringBuilder rst = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            rst.append(" ");
+        }
+        return rst.toString();
     }
 }

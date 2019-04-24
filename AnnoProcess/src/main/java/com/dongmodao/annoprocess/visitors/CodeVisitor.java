@@ -1,13 +1,12 @@
 package com.dongmodao.annoprocess.visitors;
 
 import com.dongmodao.annoprocess.utils.BoolUtils;
-import com.github.javaparser.JavaParser;
 import com.github.javaparser.StaticJavaParser;
-import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.Statement;
+import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.ModifierVisitor;
 import com.github.javaparser.ast.visitor.Visitable;
 
@@ -47,19 +46,30 @@ public class CodeVisitor extends ModifierVisitor {
                 list.add(action);
             } else {
                 String code = BoolUtils.ifBlockStmtWithVar(action.toString());
-//                log_e("code", code);
-                for (Statement statement: StaticJavaParser.parseBlock(code).findAll(Statement.class)) {
-                    log_e("stat", statement.toString());
+                for (Statement statement: StaticJavaParser.parseBlock(code).getStatements()) {
                     list.add(statement);
                 }
 
             }
         });
-//        blockStmt.getStatements().clear();
-//        log_("end");
-
-//        log_e("code list", nodeList.toString());
-        blockStmt.getStatements().addAll(list);
+        if (list.size() != 0) {
+            blockStmt.getStatements().clear();
+            if (!n.getType().isVoidType() && !list.get(list.size() - 1).isReturnStmt()) {
+                list.add(getReturnStmt(n.getType()));
+            }
+            blockStmt.getStatements().addAll(list);
+        }
         return super.visit(n, arg);
+    }
+
+    private Statement getReturnStmt(Type type) {
+        // 引用类型
+        if (!type.isPrimitiveType()) {
+            return StaticJavaParser.parseStatement("return null;");
+        } else  /* bool 类型 */ if ("boolean".equals(type.toString())) {
+            return StaticJavaParser.parseStatement("return false;");
+        } else { /* 基本类型 */
+            return StaticJavaParser.parseStatement("return 0;");
+        }
     }
 }
