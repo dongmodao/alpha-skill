@@ -70,6 +70,7 @@ public class NetworkUtils {
      */
     public static boolean getNetworkEnable(Context context) {
         return getWifiEnable(context) || getMobileEnable(context);
+
     }
 
     /**

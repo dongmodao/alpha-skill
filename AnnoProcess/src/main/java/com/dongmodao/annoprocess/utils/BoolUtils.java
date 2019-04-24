@@ -2,6 +2,8 @@ package com.dongmodao.annoprocess.utils;
 
 import java.util.Random;
 
+import static com.dongmodao.annoprocess.utils.StringUtils.emptyStr;
+
 /**
  * @author : tangqihao
  * @date : 2019/4/22
@@ -83,23 +85,15 @@ public class BoolUtils {
         }
     }
 
-    private String getStrTrueStmt() {
+    public static String getStrTrueStmt() {
         int l = random.nextInt(20) + 3;
         int r = random.nextInt(20) + 3;
 
         if (l > r) {
-            return emptyStr(l) + ".length() > " + emptyStr(r);
+            return emptyStr(l) + ".length() > " + emptyStr(r) + ".length()";
         } else {
-            return emptyStr(l) + ".length() <= " + emptyStr(r);
+            return emptyStr(l) + ".length() <= " + emptyStr(r) + ".length()";
         }
 
-    }
-
-    private String emptyStr(int n) {
-        StringBuilder rst = new StringBuilder();
-        for (int i = 0; i < n; i++) {
-            rst.append(" ");
-        }
-        return rst.toString();
     }
 }

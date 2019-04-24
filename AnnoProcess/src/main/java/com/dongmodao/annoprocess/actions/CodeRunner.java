@@ -1,6 +1,12 @@
 package com.dongmodao.annoprocess.actions;
 
-import com.dongmodao.annoprocess.visitors.CodeVisitor;
+import com.dongmodao.annoprocess.visitors.ForVisitor;
+import com.dongmodao.annoprocess.visitors.IfNullVisitor;
+import com.dongmodao.annoprocess.visitors.IfVisitor;
+import com.dongmodao.annoprocess.visitors.MethodVisitor;
+import com.dongmodao.annoprocess.visitors.PreVisitor;
+import com.dongmodao.annoprocess.visitors.SwitchVisitor;
+import com.dongmodao.annoprocess.visitors.TryCatchVisitor;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseResult;
 import com.github.javaparser.ast.CompilationUnit;
@@ -30,21 +36,24 @@ public class CodeRunner {
             log_t("flag 0. start: path = " + path + "finish");
             log_t("flag 1. run: start visit nodes and change code");
 
-//            List<MethodDeclaration> voidMethods = new ArrayList<>();
-//            compilationUnit.accept(new VoidVisitorAdapter<List<MethodDeclaration>>() {
-//                @Override
-//                public void visit(MethodDeclaration n, List<MethodDeclaration> arg) {
-//                    super.visit(n, arg);
-//                    arg.add(n);
-//                }
-//            }, voidMethods);
-//
-//            List<String> methods = getClassUsableMethods(voidMethods);
+            /*
+            preVisitor -> if -> for -> switch -> try -> if(null) -> method block
+             */
+            PreVisitor preVisitor = new PreVisitor();
+            IfVisitor ifVisitor = new IfVisitor();
+            ForVisitor forVisitor = new ForVisitor();
+            SwitchVisitor switchVisitor = new SwitchVisitor();
+            TryCatchVisitor tryCatchVisitor = new TryCatchVisitor();
+            IfNullVisitor ifNullVisitor = new IfNullVisitor();
+            MethodVisitor methodVisitor = new MethodVisitor();
 
-            // TODO: 2019/4/22 change code
-            // with method
-            CodeVisitor codeVisitor = new CodeVisitor();
-            codeVisitor.visit(compilationUnit, null);
+            compilationUnit.accept(preVisitor, null);
+            compilationUnit.accept(ifVisitor, null);
+            compilationUnit.accept(forVisitor, null);
+            compilationUnit.accept(switchVisitor, null);
+            compilationUnit.accept(tryCatchVisitor, null);
+            compilationUnit.accept(ifNullVisitor, null);
+            compilationUnit.accept(methodVisitor, null);
 
             compilationUnit.getStorage().get().save();
             log_t("flag 2. save : " + path + " to \n\t: " + compilationUnit.getStorage().get().getPath().toString() + "\n");
