@@ -2,6 +2,7 @@ package com.dongmodao.annoprocess.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author : tangqihao
@@ -9,7 +10,11 @@ import java.util.List;
  */
 public class NamePool {
 
-    private int mCurIndex = 0;
+    private static Random random = new Random(System.currentTimeMillis());
+
+    private String mPrefix = getPrefix();
+
+    private int mCurIndex = random.nextInt(1 << 10) + 1;
 
     private List<String> mNameList = new ArrayList<>();
 
@@ -36,9 +41,23 @@ public class NamePool {
     }
 
     private String getSimpleName() {
-        String name = "name" + mCurIndex;
+        String name = mPrefix + Integer.toBinaryString(mCurIndex);
         mCurIndex++;
         return name;
+    }
+
+    /**
+     * should add param to fit more times(avoid same names in a block)
+     * @return prefix of name
+     */
+    private static String getPrefix(){
+        // start at 5
+        int n = random.nextInt(5) + 5;
+        StringBuilder rst = new StringBuilder();
+        for (int i = 0; i < n; i++){
+            rst.append(random.nextBoolean() ? "o" : "O");
+        }
+        return rst.toString();
     }
 
 

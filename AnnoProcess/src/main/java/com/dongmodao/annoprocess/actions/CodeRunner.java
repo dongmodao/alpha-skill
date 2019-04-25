@@ -1,5 +1,7 @@
 package com.dongmodao.annoprocess.actions;
 
+import com.dongmodao.annoprocess.utils.Mapper;
+import com.dongmodao.annoprocess.visitors.BlockVisitor;
 import com.dongmodao.annoprocess.visitors.ForVisitor;
 import com.dongmodao.annoprocess.visitors.IfNullVisitor;
 import com.dongmodao.annoprocess.visitors.IfVisitor;
@@ -10,12 +12,9 @@ import com.dongmodao.annoprocess.visitors.TryCatchVisitor;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseResult;
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.body.MethodDeclaration;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -36,8 +35,10 @@ public class CodeRunner {
             log_t("flag 0. start: path = " + path + "finish");
             log_t("flag 1. run: start visit nodes and change code");
 
+            Mapper mapper = new Mapper();
+
             /*
-            preVisitor -> if -> for -> switch -> try -> if(null) -> method block
+            preVisitor -> if -> for -> switch -> try -> if(null) -> method block -> all block
              */
             PreVisitor preVisitor = new PreVisitor();
             IfVisitor ifVisitor = new IfVisitor();
@@ -46,32 +47,22 @@ public class CodeRunner {
             TryCatchVisitor tryCatchVisitor = new TryCatchVisitor();
             IfNullVisitor ifNullVisitor = new IfNullVisitor();
             MethodVisitor methodVisitor = new MethodVisitor();
+            BlockVisitor blockVisitor = new BlockVisitor();
 
-            compilationUnit.accept(preVisitor, null);
-            compilationUnit.accept(ifVisitor, null);
-            compilationUnit.accept(forVisitor, null);
-            compilationUnit.accept(switchVisitor, null);
-            compilationUnit.accept(tryCatchVisitor, null);
-            compilationUnit.accept(ifNullVisitor, null);
-            compilationUnit.accept(methodVisitor, null);
+            compilationUnit.accept(preVisitor, mapper);
+            compilationUnit.accept(ifVisitor, mapper);
+            compilationUnit.accept(forVisitor, mapper);
+            compilationUnit.accept(switchVisitor, mapper);
+            compilationUnit.accept(tryCatchVisitor, mapper);
+            compilationUnit.accept(ifNullVisitor, mapper);
+            compilationUnit.accept(methodVisitor, mapper);
+            compilationUnit.accept(blockVisitor, mapper);
 
             compilationUnit.getStorage().get().save();
             log_t("flag 2. save : " + path + " to \n\t: " + compilationUnit.getStorage().get().getPath().toString() + "\n");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-    }
-
-    private List<String> getClassUsableMethods(List<MethodDeclaration> voidMethods) {
-        List<String> rst = new ArrayList<>();
-        for (MethodDeclaration method: voidMethods) {
-            log_e("method", method.getNameAsString());
-            log_e("run method = ", method.getParentNode().get()+ "");
-//            if ("run".equals(method.getNameAsString())) {
-//                log_e("run method = ", method.getParentNode().get().toString() + "");
-//            }
-        }
-        return rst;
     }
 
 

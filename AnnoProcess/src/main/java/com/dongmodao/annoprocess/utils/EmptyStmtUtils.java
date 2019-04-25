@@ -1,5 +1,7 @@
 package com.dongmodao.annoprocess.utils;
 
+import com.github.javaparser.ast.stmt.BlockStmt;
+
 import java.util.Random;
 
 import static com.dongmodao.annoprocess.utils.StringUtils.emptyStr;
@@ -16,4 +18,6 @@ public class EmptyStmtUtils {
 
         return emptyStr(mRandom.nextInt(20) + 3) + ".length();";
     }
+
+
 }

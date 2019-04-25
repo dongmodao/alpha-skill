@@ -9,9 +9,9 @@ import static com.dongmodao.annoprocess.utils.StringUtils.emptyStr;
  * @date : 2019/4/22
  */
 public class BoolUtils {
-    static Random random = new Random(System.currentTimeMillis());
+    private static Random random = new Random(System.currentTimeMillis());
 
-    private static String getBitStatement() {
+    private static String getBitTrueStatement() {
         StringBuilder builder = new StringBuilder();
         int limit = random.nextInt(20) + 1;
         int limit1 = random.nextInt(limit) + 5;
@@ -24,16 +24,12 @@ public class BoolUtils {
         int d = random.nextInt(limit2) + 5;
 
         if (a >> b > c >> d) {
-            builder.append(a + " << " + b + " > " + c + " >> " + d);
+            builder.append(a).append(" >> ").append(b).append(" > ").append(c).append(" >> ").append(d);
         } else {
-            builder.append(a + " << " + b + " <= " + c + " >> " + d);
+            builder.append(a).append(" >> ").append(b).append(" <= ").append(c).append(" >> ").append(d);
         }
 
         return builder.toString();
-    }
-
-    public static String ifStatement(String then) {
-        return "if(" + getBitStatement() + "){" + then + "}";
     }
 
     /**
@@ -85,7 +81,9 @@ public class BoolUtils {
         }
     }
 
-    public static String getStrTrueStmt() {
+    // true stmt str
+
+    private static String getEmptyTrueStmt() {
         int l = random.nextInt(20) + 3;
         int r = random.nextInt(20) + 3;
 
@@ -94,6 +92,20 @@ public class BoolUtils {
         } else {
             return emptyStr(l) + ".length() <= " + emptyStr(r) + ".length()";
         }
+    }
 
+    private static String getBitTrueStmt() {
+        return getBitTrueStatement();
+    }
+
+    public static String getTrueStmt() {
+        switch (random.nextInt() % 2) {
+            case 0:
+                return getEmptyTrueStmt();
+            case 1:
+                return getBitTrueStmt();
+            default:
+                return getBitTrueStmt();
+        }
     }
 }
