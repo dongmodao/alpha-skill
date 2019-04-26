@@ -11,7 +11,6 @@
             <option value="$PROJECT_DIR$/AnnoProcess" />
             <option value="$PROJECT_DIR$/SubsAnnotation" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/subsprocess" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

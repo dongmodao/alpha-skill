@@ -53,7 +53,7 @@ public class PreVisitor extends BaseVisitor {
                 .setType(Void.class)
                 .addParameter(new Parameter(new ClassOrInterfaceType("Object"), NamePool.getInstance().getRandomName()))
                 .setBody(StmtUtils.getBlockStmt(
-                        StmtUtils.getIfStmtStr( boolMethod.getParameter(0).getNameAsString() + " instanceof String",
+                        StmtUtils.getIfStmtStr( useVarMethod.getParameter(0).getNameAsString() + " instanceof String",
                                 "System.out.println();"))
                 );
 
@@ -61,6 +61,9 @@ public class PreVisitor extends BaseVisitor {
         ((Mapper) arg).setJudge(boolMethod.getNameAsString());
         // save for avoiding ifStmt change this method
         ((Mapper) arg).setJudgeParamName(boolMethod.getParameter(0).getNameAsString());
+
+        ((Mapper) arg).setUse(useVarMethod.getNameAsString());
+        ((Mapper) arg).setUseParamName(useVarMethod.getParameter(0).getNameAsString());
         return super.visit(n, arg);
     }
 }

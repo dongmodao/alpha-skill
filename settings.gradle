@@ -1,1 +1,1 @@
-include ':app', ':SubsAnnotation', ':AnnoProcess', ':subsprocess'
+include ':app', ':SubsAnnotation', ':AnnoProcess'

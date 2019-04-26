@@ -2,6 +2,7 @@ package com.dongmodao.annoprocess.utils;
 
 import java.util.Random;
 
+import static com.dongmodao.annoprocess.utils.RandomUtil.sRandom;
 import static com.dongmodao.annoprocess.utils.StringUtils.emptyStr;
 
 /**
@@ -9,7 +10,7 @@ import static com.dongmodao.annoprocess.utils.StringUtils.emptyStr;
  * @date : 2019/4/22
  */
 public class BoolUtils {
-    private static Random random = new Random(System.currentTimeMillis());
+    private static Random random = sRandom;
 
     private static String getBitTrueStatement() {
         StringBuilder builder = new StringBuilder();

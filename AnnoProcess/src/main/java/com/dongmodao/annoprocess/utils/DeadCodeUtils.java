@@ -2,6 +2,7 @@ package com.dongmodao.annoprocess.utils;
 
 import java.util.Random;
 
+import static com.dongmodao.annoprocess.utils.RandomUtil.sRandom;
 import static com.dongmodao.annoprocess.utils.StringUtils.emptyStr;
 
 /**
@@ -10,7 +11,7 @@ import static com.dongmodao.annoprocess.utils.StringUtils.emptyStr;
  */
 public class DeadCodeUtils {
 
-    private static Random random = new Random();
+    private static Random random = sRandom;
 
     public static String getStmtStr() {
 

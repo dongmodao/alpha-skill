@@ -1,14 +1,9 @@
 package com.dongmodao.annoprocess.actions;
 
 import com.dongmodao.annoprocess.utils.Mapper;
-import com.dongmodao.annoprocess.visitors.BlockVisitor;
-import com.dongmodao.annoprocess.visitors.ForVisitor;
-import com.dongmodao.annoprocess.visitors.IfNullVisitor;
-import com.dongmodao.annoprocess.visitors.IfVisitor;
+import com.dongmodao.annoprocess.visitors.AfterVisitor;
 import com.dongmodao.annoprocess.visitors.MethodVisitor;
 import com.dongmodao.annoprocess.visitors.PreVisitor;
-import com.dongmodao.annoprocess.visitors.SwitchVisitor;
-import com.dongmodao.annoprocess.visitors.TryCatchVisitor;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseResult;
 import com.github.javaparser.ast.CompilationUnit;
@@ -38,25 +33,17 @@ public class CodeRunner {
             Mapper mapper = new Mapper();
 
             /*
-            preVisitor -> if -> for -> switch -> try -> if(null) -> method block -> all block
+            preVisitor -> if -> for -> switch -> try -> if(null) -> method block -> all block   : WRONG!!!
+            start at method visitor, then can check the method name, avoid some visit in bool/use methods.
+            for many codes contained in methods body, it's ok to run with method block instead of compilation unit if don't operate with field/var at main class level.
              */
             PreVisitor preVisitor = new PreVisitor();
-            IfVisitor ifVisitor = new IfVisitor();
-            ForVisitor forVisitor = new ForVisitor();
-            SwitchVisitor switchVisitor = new SwitchVisitor();
-            TryCatchVisitor tryCatchVisitor = new TryCatchVisitor();
-            IfNullVisitor ifNullVisitor = new IfNullVisitor();
             MethodVisitor methodVisitor = new MethodVisitor();
-            BlockVisitor blockVisitor = new BlockVisitor();
+            AfterVisitor afterVisitor = new AfterVisitor();
 
             compilationUnit.accept(preVisitor, mapper);
-            compilationUnit.accept(ifVisitor, mapper);
-            compilationUnit.accept(forVisitor, mapper);
-            compilationUnit.accept(switchVisitor, mapper);
-            compilationUnit.accept(tryCatchVisitor, mapper);
-            compilationUnit.accept(ifNullVisitor, mapper);
             compilationUnit.accept(methodVisitor, mapper);
-            compilationUnit.accept(blockVisitor, mapper);
+            compilationUnit.accept(afterVisitor, null);
 
             compilationUnit.getStorage().get().save();
             log_t("flag 2. save : " + path + " to \n\t: " + compilationUnit.getStorage().get().getPath().toString() + "\n");

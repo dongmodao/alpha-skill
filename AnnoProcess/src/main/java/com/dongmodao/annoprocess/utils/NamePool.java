@@ -4,13 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.dongmodao.annoprocess.utils.RandomUtil.sRandom;
+
 /**
  * @author : tangqihao
  * @date : 2019/4/22
  */
 public class NamePool {
 
-    private static Random random = new Random(System.currentTimeMillis());
+    private static Random random = sRandom;
 
     private String mPrefix = getPrefix();
 
