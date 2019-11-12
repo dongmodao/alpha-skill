@@ -8,4 +8,5 @@ import android.app.Application;
  * @time: 22:04
  */
 public class TheApplication extends Application {
+
 }
